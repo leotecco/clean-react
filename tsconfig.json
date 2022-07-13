@@ -11,6 +11,7 @@
     "paths": {
       "@/data/*": ["data/*"],
       "@/domain/*": ["domain/*"],
+      "@/infra/*": ["infra/*"],
     },
     "allowJs": true,
     "skipLibCheck": true,
