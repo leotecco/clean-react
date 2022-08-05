@@ -12,6 +12,7 @@
       "@/data/*": ["data/*"],
       "@/domain/*": ["domain/*"],
       "@/infra/*": ["infra/*"],
+      "@/presentation/*": ["presentation/*"],
     },
     "allowJs": true,
     "esModuleInterop": true,
