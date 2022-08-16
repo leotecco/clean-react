@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React from 'react'
 
 import Styles from './input-styles.scss'
 
@@ -13,4 +13,4 @@ const Input: React.FC<Props> = (props: Props) => {
   )
 }
 
-export default memo(Input)
+export default Input
