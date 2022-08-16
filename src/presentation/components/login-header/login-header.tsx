@@ -4,8 +4,6 @@ import Logo from '../logo/logo'
 
 import Styles from './login-header-styles.scss'
 
-console.log(Styles)
-
 const LoginHeader: React.FC = () => {
   return (
     <header className={Styles.loginHeader}>
