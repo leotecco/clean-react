@@ -8,7 +8,7 @@ const Router: React.FC = () => {
   return <BrowserRouter>
     <Routes>
       <Route path='/'>
-        <Route path="login" element={<Login />} />
+        <Route path="login" element={<Login validation={{ validate: () => '' }} authentication={{ auth: async () => ({ accessToken: '' }) }} />} />
       </Route>
     </Routes>
   </BrowserRouter>
