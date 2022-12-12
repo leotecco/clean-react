@@ -61,7 +61,7 @@ const simulateValidSubmit = (sut: RenderResult, email = faker.internet.email(), 
   fireEvent.click(submitButton)
 }
 
-const checkStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
+const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
   const fieldStatus = sut.getByTestId(`${fieldName}-status`)
   expect(fieldStatus.title).toBe(validationError || 'Tudo certo!')
   expect(fieldStatus.textContent).toBe(validationError ? '🔴' : '🟢')
@@ -82,8 +82,8 @@ describe('Login Component', () => {
     const submitButton = sut.getByTestId('submit') as HTMLButtonElement
     expect(submitButton.disabled).toBe(true)
 
-    checkStatusForField(sut, 'email', validationError)
-    checkStatusForField(sut, 'password', validationError)
+    testStatusForField(sut, 'email', validationError)
+    testStatusForField(sut, 'password', validationError)
   })
 
   test('Should show email error if Validation fails', () => {
@@ -92,7 +92,7 @@ describe('Login Component', () => {
 
     populateEmailField(sut)
 
-    checkStatusForField(sut, 'email', validationError)
+    testStatusForField(sut, 'email', validationError)
   })
 
   test('Should show password error if Validation fails', () => {
@@ -101,7 +101,7 @@ describe('Login Component', () => {
 
     populatePasswordField(sut)
 
-    checkStatusForField(sut, 'password', validationError)
+    testStatusForField(sut, 'password', validationError)
   })
 
   test('Should show valid email state if Validation succeeds', () => {
@@ -109,7 +109,7 @@ describe('Login Component', () => {
 
     populateEmailField(sut)
 
-    checkStatusForField(sut, 'email')
+    testStatusForField(sut, 'email')
   })
 
   test('Should show valid password state if Validation succeeds', () => {
@@ -117,7 +117,7 @@ describe('Login Component', () => {
 
     populatePasswordField(sut)
 
-    checkStatusForField(sut, 'password')
+    testStatusForField(sut, 'password')
   })
 
   test('Should enable submit button if form is valid', () => {
@@ -167,9 +167,7 @@ describe('Login Component', () => {
     const validationError = faker.random.words()
     const { sut, authenticationSpy } = makeSut({ validationError })
 
-    populateEmailField(sut)
-
-    fireEvent.submit(sut.getByTestId('form'))
+    simulateValidSubmit(sut)
 
     expect(authenticationSpy.callsCount).toBe(0)
   })
@@ -192,15 +190,14 @@ describe('Login Component', () => {
   })
 
   test('Should add accessToken to localStorage on success', async () => {
-    const { sut, authenticationSpy } = makeSut()
+    const { sut, authenticationSpy, router } = makeSut()
 
     simulateValidSubmit(sut)
 
-    await waitFor(() => {
-      sut.getByTestId('form')
-    })
+    await waitFor(() => sut.getByTestId('form'))
 
     expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+    expect(router.state.location.pathname).toBe('/')
   })
 
   test('Should go to signup page', async () => {
