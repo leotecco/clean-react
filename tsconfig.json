@@ -13,6 +13,7 @@
       "@/domain/*": ["domain/*"],
       "@/infra/*": ["infra/*"],
       "@/presentation/*": ["presentation/*"],
+      "@/validation/*": ["validation/*"],
     },
     "allowJs": true,
     "esModuleInterop": true,
