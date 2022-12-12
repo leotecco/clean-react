@@ -2,10 +2,12 @@ import React from 'react'
 
 import { faker } from '@faker-js/faker'
 
-import { fireEvent, render, RenderResult } from '@testing-library/react'
+import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
+
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
-
+import { InvalidCredentialsError } from '@/domain/errors'
 import Login from './login'
 
 type SutParams = {
@@ -15,6 +17,7 @@ type SutParams = {
 type SutTypes = {
   sut: RenderResult
   authenticationSpy: AuthenticationSpy
+  router: ReturnType<typeof createMemoryRouter>
 }
 
 const makeSut = (params?: SutParams): SutTypes => {
@@ -23,9 +26,21 @@ const makeSut = (params?: SutParams): SutTypes => {
 
   const authenticationSpy = new AuthenticationSpy()
 
-  const sut = render(<Login validation={validationStub} authentication={authenticationSpy} />)
+  const routes = [
+    { path: '/', element: <>Home</> },
+    { path: '/signup', element: <>Sign up</> },
+    { path: '/login', element: <Login validation={validationStub} authentication={authenticationSpy} /> }
+  ]
+  const router = createMemoryRouter(routes, {
+    initialEntries: ['/login'],
+    initialIndex: 0
+  })
 
-  return { sut, authenticationSpy }
+  const sut = render(
+    <RouterProvider router={router} />
+  )
+
+  return { authenticationSpy, router, sut }
 }
 
 const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
@@ -53,6 +68,10 @@ const checkStatusForField = (sut: RenderResult, fieldName: string, validationErr
 }
 
 describe('Login Component', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   test('Should start with initial state', () => {
     const validationError = faker.random.words()
     const { sut } = makeSut({ validationError })
@@ -111,21 +130,86 @@ describe('Login Component', () => {
     expect(submitButton.disabled).toBe(false)
   })
 
-  test('Should show spinner on submit', () => {
+  test('Should show spinner on submit', async () => {
     const { sut } = makeSut()
     simulateValidSubmit(sut)
 
     const spinner = sut.getByTestId('spinner')
     expect(spinner).toBeTruthy()
+
+    await waitFor(() => sut.getByText('Home'))
   })
 
-  test('Should call Authentication with correct values', () => {
+  test('Should call Authentication with correct values', async () => {
     const { sut, authenticationSpy } = makeSut()
     const email = faker.internet.email()
     const password = faker.internet.password()
 
     simulateValidSubmit(sut, email, password)
 
+    await waitFor(() => sut.getByText('Home'))
+
     expect(authenticationSpy.params).toEqual({ email, password })
+  })
+
+  test('Should call Authentication only once', async () => {
+    const { sut, authenticationSpy } = makeSut()
+
+    simulateValidSubmit(sut)
+    simulateValidSubmit(sut)
+
+    await waitFor(() => sut.getByText('Home'))
+
+    expect(authenticationSpy.callsCount).toBe(1)
+  })
+
+  test('Should not call Authentication if form is invalid', () => {
+    const validationError = faker.random.words()
+    const { sut, authenticationSpy } = makeSut({ validationError })
+
+    populateEmailField(sut)
+
+    fireEvent.submit(sut.getByTestId('form'))
+
+    expect(authenticationSpy.callsCount).toBe(0)
+  })
+
+  test('Should present error if Authentication fails', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    const error = new InvalidCredentialsError()
+
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+
+    simulateValidSubmit(sut)
+
+    await waitFor(() => {
+      const errorWrap = sut.getByTestId('error-wrap')
+      const mainError = sut.getByTestId('main-error')
+
+      expect(errorWrap.childElementCount).toBe(1)
+      expect(mainError.textContent).toBe(error.message)
+    })
+  })
+
+  test('Should add accessToken to localStorage on success', async () => {
+    const { sut, authenticationSpy } = makeSut()
+
+    simulateValidSubmit(sut)
+
+    await waitFor(() => {
+      sut.getByTestId('form')
+    })
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('accessToken', authenticationSpy.account.accessToken)
+  })
+
+  test('Should go to signup page', async () => {
+    const { sut, router } = makeSut()
+
+    const signup = sut.getByTestId('signup')
+
+    fireEvent.click(signup)
+
+    expect(router.state.location.pathname).toBe('/signup')
   })
 })
