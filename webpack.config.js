@@ -8,7 +8,6 @@ module.exports = {
     path: path.join(__dirname, 'public/js'),
     publicPath: '/public/js',
     filename: 'bundle.js',
-    sourceMapFilename: '[name].js.map'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', 'scss'],
