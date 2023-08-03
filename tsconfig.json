@@ -12,6 +12,7 @@
       "@/data/*": ["data/*"],
       "@/domain/*": ["domain/*"],
       "@/infra/*": ["infra/*"],
+      "@/main/*": ["main/*"],
       "@/presentation/*": ["presentation/*"],
       "@/validation/*": ["validation/*"],
     },
