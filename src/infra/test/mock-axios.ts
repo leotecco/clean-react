@@ -1,10 +1,8 @@
 import { faker } from '@faker-js/faker'
 import axios from 'axios'
 
-export const mockAxios = (): jest.Mocked<typeof axios> => {
-  const mockedAxios = axios as jest.Mocked<typeof axios>
-
-  mockedAxios.post.mockResolvedValue({
+export const mockHttpResponse = (): any => {
+  return {
     data: {
       customer: {
         firstName: faker.name.firstName(),
@@ -12,7 +10,13 @@ export const mockAxios = (): jest.Mocked<typeof axios> => {
       }
     },
     status: faker.random.numeric(3)
-  })
+  }
+}
+
+export const mockAxios = (): jest.Mocked<typeof axios> => {
+  const mockedAxios = axios as jest.Mocked<typeof axios>
+
+  mockedAxios.post.mockResolvedValue(mockHttpResponse())
 
   return mockedAxios
 }
