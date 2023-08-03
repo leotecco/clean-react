@@ -8,7 +8,7 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { ValidationStub, AuthenticationSpy } from '@/presentation/test'
 import { InvalidCredentialsError } from '@/domain/errors'
-import Login from './login'
+import { Login } from '@/presentation/pages'
 
 type SutParams = {
   validationError: string
