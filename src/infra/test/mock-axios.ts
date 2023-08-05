@@ -5,11 +5,11 @@ export const mockHttpResponse = (): any => {
   return {
     data: {
       customer: {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName()
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName()
       }
     },
-    status: faker.random.numeric(3)
+    status: faker.string.numeric(3)
   }
 }
 

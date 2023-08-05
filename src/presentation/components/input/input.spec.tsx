@@ -1,4 +1,4 @@
-import { RenderResult, fireEvent, render } from '@testing-library/react'
+import { type RenderResult, fireEvent, render } from '@testing-library/react'
 import Input from './input'
 import FormContext from '@/presentation/contexts/form/form-context'
 import { faker } from '@faker-js/faker'
