@@ -2,7 +2,7 @@ name: clean-react
 run-name: ${{ github.actor }} GitHub Actions
 on: [push]
 jobs:
-  check-linter-and-tests:
+  lint-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
