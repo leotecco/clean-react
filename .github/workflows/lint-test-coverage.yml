@@ -1,0 +1,21 @@
+name: clean-react
+run-name: Lint Test Coverage Action (${{ github.actor }})
+on: [push]
+jobs:
+  lint-test-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Check ESlint
+        run: npm run eslint:ci
+      - name: Run tests
+        run: npm run test:ci
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
