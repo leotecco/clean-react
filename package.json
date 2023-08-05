@@ -12,7 +12,7 @@
     "prepare": "husky install",
     "lint": "eslint 'src/**'",
     "check": "npm-check -u -s",
-    "eslint": "eslint 'src/**'"
+    "eslint:ci": "eslint 'src/**'"
   },
   "keywords": [],
   "author": "",
