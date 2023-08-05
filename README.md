@@ -1,4 +1,4 @@
-[![clean-react](https://github.com/leotecco/clean-react/actions/workflows/lint-and-test.yml/badge.svg?branch=main)](https://github.com/leotecco/clean-react/actions/workflows/lint-and-test.yml)
+[![clean-react](https://github.com/leotecco/clean-react/actions/workflows/lint-test-coverage.yml/badge.svg?branch=main)](https://github.com/leotecco/clean-react/actions/workflows/lint-test-coverage.yml)
 [![codecov](https://codecov.io/gh/leotecco/clean-react/branch/main/graph/badge.svg?token=MKASZQYGGX)](https://codecov.io/gh/leotecco/clean-react)
 
 # clean-react
