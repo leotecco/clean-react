@@ -1,0 +1,13 @@
+name: clean-react
+run-name: ${{ github.actor }} GitHub Actions
+on: [push]
+jobs:
+  check-linter-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: eslint 'src/**'
+      - run: npm run test:ci
