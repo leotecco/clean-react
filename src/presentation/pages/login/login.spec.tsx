@@ -1,8 +1,6 @@
-import React from 'react'
-
 import { faker } from '@faker-js/faker'
 
-import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react'
+import { fireEvent, render, type RenderResult, waitFor } from '@testing-library/react'
 
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
