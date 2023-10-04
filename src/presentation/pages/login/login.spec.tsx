@@ -57,8 +57,7 @@ describe('Login Component', () => {
     const validationError = faker.word.words()
     const { sut } = makeSut({ validationError })
 
-    const errorWrap = sut.getByTestId('error-wrap')
-    expect(errorWrap.childElementCount).toBe(0)
+    Helper.testChildCount(sut, 'error-wrap', 0)
 
     const submitButton = sut.getByTestId('submit') as HTMLButtonElement
     expect(submitButton.disabled).toBe(true)
@@ -115,8 +114,7 @@ describe('Login Component', () => {
     const { sut } = makeSut()
     simulateValidSubmit(sut)
 
-    const spinner = sut.getByTestId('spinner')
-    expect(spinner).toBeTruthy()
+    Helper.testElementExists(sut, 'spinner')
 
     await waitFor(() => sut.getByText('Home'))
   })
@@ -157,16 +155,13 @@ describe('Login Component', () => {
     const { sut, authenticationSpy } = makeSut()
     const error = new InvalidCredentialsError()
 
-    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.reject(error))
+    jest.spyOn(authenticationSpy, 'auth').mockRejectedValueOnce(error)
 
     simulateValidSubmit(sut)
 
     await waitFor(() => {
-      const errorWrap = sut.getByTestId('error-wrap')
-      const mainError = sut.getByTestId('main-error')
-
-      expect(errorWrap.childElementCount).toBe(1)
-      expect(mainError.textContent).toBe(error.message)
+      Helper.testElementText(sut, 'main-error', error.message)
+      Helper.testChildCount(sut, 'error-wrap', 1)
     })
   })
 
@@ -185,23 +180,20 @@ describe('Login Component', () => {
     const { sut, saveAccessTokenMock } = makeSut()
     const error = new InvalidCredentialsError()
 
-    jest.spyOn(saveAccessTokenMock, 'save').mockReturnValueOnce(Promise.reject(error))
+    jest.spyOn(saveAccessTokenMock, 'save').mockRejectedValueOnce(error)
 
     simulateValidSubmit(sut)
 
     await waitFor(() => {
-      const errorWrap = sut.getByTestId('error-wrap')
-      const mainError = sut.getByTestId('main-error')
-
-      expect(errorWrap.childElementCount).toBe(1)
-      expect(mainError.textContent).toBe(error.message)
+      Helper.testElementText(sut, 'main-error', error.message)
+      Helper.testChildCount(sut, 'error-wrap', 1)
     })
   })
 
   test('Should go to signup page', async () => {
     const { sut, router } = makeSut()
 
-    const signup = sut.getByTestId('signup')
+    const signup = sut.getByTestId('signup-link')
 
     fireEvent.click(signup)
 

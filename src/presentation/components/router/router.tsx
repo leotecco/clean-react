@@ -10,7 +10,7 @@ const Router: React.FC = () => {
     <Routes>
       <Route path='/'>
         <Route path="login" element={makeLogin()} />
-        <Route path="signup" element={<SignUp validation={{ validate: () => 'Campo obrigatório' }} />} />
+        <Route path="signup" element={<SignUp validation={{ validate: () => 'Campo obrigatório' }} addAccount={{ add: async () => ({ accessToken: '' }) }} saveAccessToken={{ save: async () => undefined }} />} />
       </Route>
     </Routes>
   </BrowserRouter>
