@@ -1,7 +1,7 @@
-@import './colors.scss';
+@import "./colors.scss";
 
 * {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 14px;
   padding: 0;
   margin: 0;
@@ -35,5 +35,14 @@ button {
 
   &:hover {
     opacity: 0.9;
+  }
+
+  &:disabled {
+    background-color: $disabledBackground;
+    color: $disabledColor;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
