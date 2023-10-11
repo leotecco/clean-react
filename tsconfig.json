@@ -28,8 +28,6 @@
   },
   "include": [
     "src",
-    "./jest.config.js",
-    "./cypress.config.ts",
   ],
   "exclude": [
     "./src/main/test/cypress"
