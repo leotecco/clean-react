@@ -6,8 +6,8 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:8080',
     fixturesFolder: false,
-    supportFile: false,
-    specPattern: 'src/main/test/cypress/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: 'src/main/test/cypress/support/e2e.{ts,tsx}',
+    specPattern: 'src/main/test/cypress/e2e/**/*.cy.{ts,tsx}',
     setupNodeEvents (on, config) {
       on('file:preprocessor', cypressEslint({
         webpackOptions: {

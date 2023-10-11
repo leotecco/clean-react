@@ -5,6 +5,6 @@
   },
   "include": [
     "../../../../node_modules/cypress",
-    "./*/*.cy.ts",
+    "./*/*.ts",
   ]
 }
