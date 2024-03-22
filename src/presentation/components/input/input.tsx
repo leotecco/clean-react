@@ -18,18 +18,24 @@ const Input: React.FC<Props> = (props) => {
     setState((state) => ({ ...state, [event.target.name]: event.target.value }))
   }
 
-  const getStatus = (): string => {
-    return error ? '🔴' : '🟢'
-  }
-
-  const getTitle = (): string => {
-    return error || 'Tudo certo!'
-  }
-
   return (
     <div className={Styles.inputWrap}>
-      <input {...props} data-testid={props.name} onFocus={handleFocus} onChange={handleChange} readOnly />
-      <span title={getTitle()} className={Styles.status} data-testid={`${props.name}-status`}>{getStatus()}</span>
+      <input
+        {...props}
+        placeholder=" "
+        data-testid={props.name}
+        onFocus={handleFocus}
+        onChange={handleChange}
+        readOnly
+      />
+      <label>{props.placeholder}</label>
+      <span
+        title={error || 'Tudo certo!'}
+        className={Styles.status}
+        data-testid={`${props.name}-status`}
+      >
+        {error ? '🔴' : '🟢'}
+      </span>
     </div>
   )
 }
