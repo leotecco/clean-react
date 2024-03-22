@@ -85,4 +85,23 @@ describe('Login', () => {
 
     cy.url().should('eq', `${baseUrl}/login`)
   })
+
+  it('Should present save accessToken valid credentials are provided', () => {
+    cy.intercept('POST', 'http://localhost:5050/api/login').as('authenticate')
+
+    cy.getByTestId('email').focus()
+    cy.getByTestId('email').type('teste@teste.com')
+
+    cy.getByTestId('password').focus()
+    cy.getByTestId('password').type('123456')
+
+    cy.getByTestId('submit').click()
+
+    cy.getByTestId('error-wrap')
+      .getByTestId('spinner').should('not.exist')
+      .getByTestId('main-error').should('not.exist')
+
+    cy.url().should('eq', `${baseUrl}/`)
+    cy.window().then(window => { assert.isOk(window.localStorage.getItem('accessToken')) })
+  })
 })
