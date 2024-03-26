@@ -168,7 +168,7 @@ describe('Login', () => {
     cy.window().then(window => { assert.isOk(window.localStorage.getItem('accessToken')) })
   })
 
-  it.only('Should prevent multiple submits', () => {
+  it('Should prevent multiple submits', () => {
     cy.intercept(
       'POST',
       'http://localhost:5050/api/login',
@@ -188,5 +188,24 @@ describe('Login', () => {
     cy.getByTestId('password').type('{enter}{enter}')
 
     cy.get('@authenticate.all').should('have.length', 1)
+  })
+
+  it('Should not call submit if form is invalid', () => {
+    cy.intercept(
+      'POST',
+      'http://localhost:5050/api/login',
+      {
+        statusCode: 200,
+        body: {
+          accessToken: faker.string.uuid()
+        }
+      })
+      .as('authenticate')
+
+    cy.getByTestId('email').focus()
+    cy.getByTestId('email').type(faker.internet.email())
+    cy.getByTestId('email').type('{enter}')
+
+    cy.get('@authenticate.all').should('have.length', 0)
   })
 })
