@@ -154,10 +154,10 @@ describe('Login', () => {
       })
 
     cy.getByTestId('email').focus()
-    cy.getByTestId('email').type('teste@teste.com')
+    cy.getByTestId('email').type(faker.internet.email())
 
     cy.getByTestId('password').focus()
-    cy.getByTestId('password').type('123456')
+    cy.getByTestId('password').type(faker.string.alphanumeric(5))
 
     cy.getByTestId('submit').click()
 
@@ -166,5 +166,27 @@ describe('Login', () => {
 
     cy.url().should('eq', `${baseUrl}/`)
     cy.window().then(window => { assert.isOk(window.localStorage.getItem('accessToken')) })
+  })
+
+  it.only('Should prevent multiple submits', () => {
+    cy.intercept(
+      'POST',
+      'http://localhost:5050/api/login',
+      {
+        statusCode: 200,
+        body: {
+          accessToken: faker.string.uuid()
+        }
+      })
+      .as('authenticate')
+
+    cy.getByTestId('email').focus()
+    cy.getByTestId('email').type(faker.internet.email())
+
+    cy.getByTestId('password').focus()
+    cy.getByTestId('password').type(faker.string.alphanumeric(5))
+    cy.getByTestId('password').type('{enter}{enter}')
+
+    cy.get('@authenticate.all').should('have.length', 1)
   })
 })
