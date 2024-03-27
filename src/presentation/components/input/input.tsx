@@ -15,21 +15,30 @@ const Input: React.FC<Props> = (props) => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setState((state) => ({ ...state, [event.target.name]: event.target.value }))
-  }
-
-  const getStatus = (): string => {
-    return error ? '🔴' : '🟢'
-  }
-
-  const getTitle = (): string => {
-    return error || 'Tudo certo!'
+    setState((state) => ({
+      ...state,
+      [event.target.name]: event.target.value
+    }))
   }
 
   return (
-    <div className={Styles.inputWrap}>
-      <input {...props} data-testid={props.name} onFocus={handleFocus} onChange={handleChange} readOnly />
-      <span title={getTitle()} className={Styles.status} data-testid={`${props.name}-status`}>{getStatus()}</span>
+    <div
+      className={Styles.inputWrap}
+      data-testid={`${props.name}-wrap`}
+      data-status={error ? 'invalid' : 'valid'}
+    >
+      <input
+        {...props}
+        title={error}
+        placeholder=" "
+        data-testid={props.name}
+        onFocus={handleFocus}
+        onChange={handleChange}
+        readOnly
+      />
+      <label title={error} data-testid={`${props.name}-label`}>
+        {props.placeholder}
+      </label>
     </div>
   )
 }
