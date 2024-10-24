@@ -1,13 +1,21 @@
 import { faker } from '@faker-js/faker'
 import * as FormHelper from '../support/form-helper'
-import * as Http from '../support/login-mocks'
+import * as Http from '../support/signup-mocks'
 
 const populateFields = (): void => {
+  cy.getByTestId('name').focus()
+  cy.getByTestId('name').type(faker.person.fullName())
+
   cy.getByTestId('email').focus()
   cy.getByTestId('email').type(faker.internet.email())
 
+  const password = faker.string.alphanumeric(5)
+
   cy.getByTestId('password').focus()
-  cy.getByTestId('password').type(faker.string.alphanumeric(5))
+  cy.getByTestId('password').type(password)
+
+  cy.getByTestId('passwordConfirmation').focus()
+  cy.getByTestId('passwordConfirmation').type(password)
 }
 
 const simulateValidSubmit = (): void => {
@@ -16,16 +24,22 @@ const simulateValidSubmit = (): void => {
   cy.getByTestId('submit').click()
 }
 
-describe('Login', () => {
+describe('SignUp', () => {
   beforeEach(() => {
-    cy.visit('login')
+    cy.visit('signup')
   })
 
   it('Should load with correct initial state', () => {
+    FormHelper.testInputStatus('name', 'Campo obrigatório')
+    cy.getByTestId('email').should('have.attr', 'readOnly')
+
     FormHelper.testInputStatus('email', 'Campo obrigatório')
     cy.getByTestId('email').should('have.attr', 'readOnly')
 
     FormHelper.testInputStatus('password', 'Campo obrigatório')
+    cy.getByTestId('password').should('have.attr', 'readOnly')
+
+    FormHelper.testInputStatus('passwordConfirmation', 'Campo obrigatório')
     cy.getByTestId('password').should('have.attr', 'readOnly')
 
     cy.getByTestId('submit').should('have.attr', 'disabled')
@@ -34,6 +48,10 @@ describe('Login', () => {
   })
 
   it('Should present error if form is invalid', () => {
+    cy.getByTestId('name').focus()
+    cy.getByTestId('name').type(faker.string.alphanumeric(3))
+    FormHelper.testInputStatus('name', 'Valor inválido')
+
     cy.getByTestId('email').focus()
     cy.getByTestId('email').type(faker.word.words())
     FormHelper.testInputStatus('email', 'Valor inválido')
@@ -42,19 +60,33 @@ describe('Login', () => {
     cy.getByTestId('password').type(faker.string.alphanumeric(3))
     FormHelper.testInputStatus('password', 'Valor inválido')
 
+    cy.getByTestId('passwordConfirmation').focus()
+    cy.getByTestId('passwordConfirmation').type(faker.string.alphanumeric(4))
+    FormHelper.testInputStatus('passwordConfirmation', 'Valor inválido')
+
     cy.getByTestId('submit').should('have.attr', 'disabled')
 
     cy.getByTestId('error-wrap').should('not.have.descendants')
   })
 
   it('Should present valid if form is valid', () => {
+    cy.getByTestId('name').focus()
+    cy.getByTestId('name').type(faker.person.fullName())
+    FormHelper.testInputStatus('name')
+
     cy.getByTestId('email').focus()
     cy.getByTestId('email').type(faker.internet.email())
     FormHelper.testInputStatus('email')
 
+    const password = faker.string.alphanumeric(5)
+
     cy.getByTestId('password').focus()
-    cy.getByTestId('password').type(faker.string.alphanumeric(5))
+    cy.getByTestId('password').type(password)
     FormHelper.testInputStatus('password')
+
+    cy.getByTestId('passwordConfirmation').focus()
+    cy.getByTestId('passwordConfirmation').type(password)
+    FormHelper.testInputStatus('passwordConfirmation')
 
     cy.getByTestId('submit').should('not.have.attr', 'disabled')
 
@@ -66,16 +98,16 @@ describe('Login', () => {
     simulateValidSubmit()
 
     FormHelper.testMainError('Algo de errado aconteceu. Tente novamente em breve.')
-    FormHelper.testUrl('/login')
+    FormHelper.testUrl('/signup')
   })
 
-  it('Should present InvalidCredentialsError on 401', () => {
-    Http.mockInvalidCredentialsError()
+  it('Should present EmailInUseError on 403', () => {
+    Http.mockEmailInUseError()
     simulateValidSubmit()
 
-    FormHelper.testMainError('Credenciais inválidas')
+    FormHelper.testMainError('Esse e-mail já está em uso')
 
-    FormHelper.testUrl('/login')
+    FormHelper.testUrl('/signup')
   })
 
   it('Should present UnexpectedError if invalid data is returned', () => {
@@ -84,7 +116,7 @@ describe('Login', () => {
 
     FormHelper.testMainError('Algo de errado aconteceu. Tente novamente em breve.')
 
-    FormHelper.testUrl('/login')
+    FormHelper.testUrl('/signup')
   })
 
   it('Should present save accessToken valid credentials are provided', () => {
@@ -102,7 +134,7 @@ describe('Login', () => {
     Http.mockOk()
 
     populateFields()
-    cy.getByTestId('password').type('{enter}{enter}')
+    cy.getByTestId('passwordConfirmation').type('{enter}{enter}')
 
     FormHelper.testHttpCallsCount(1)
   })
