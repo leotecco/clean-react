@@ -14,7 +14,7 @@ type Props = {
   saveAccessToken: SaveAccessToken
 }
 
-const Signup: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Props) => {
+const Signup: React.FC<Props> = ({ validation, addAccount, saveAccessToken }) => {
   const navigate = useNavigate()
 
   const [state, setState] = useState({
@@ -81,7 +81,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, saveAccessToken }: Pr
   }
 
   return (
-    <div className={Styles.signup}>
+    <div className={Styles.signupWrap}>
       <LoginHeader />
 
       <Context.Provider value={{ state, setState }}>
