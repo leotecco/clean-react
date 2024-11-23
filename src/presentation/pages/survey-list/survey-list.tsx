@@ -22,54 +22,13 @@ const SurveyList: React.FC = () => {
         <ul>
           <li>
             <div className={Styles.surveyContent}>
-              <time>
-                <span className={Styles.day}>15</span>
-                <span className={Styles.month}>11</span>
-                <span className={Styles.year}>2024</span>
-              </time>
+              <div className={[Styles.iconWrap, Styles.red].join(' ')}>
+                <img
+                  className={Styles.icon}
+                  src="/images/icon-thumb-down.png"
+                />
+              </div>
 
-              <p>Qual é o seu framework Web favorito?</p>
-            </div>
-            <footer>Ver resultado</footer>
-          </li>
-          <li>
-            <div className={Styles.surveyContent}>
-              <time>
-                <span className={Styles.day}>15</span>
-                <span className={Styles.month}>11</span>
-                <span className={Styles.year}>2024</span>
-              </time>
-
-              <p>Qual é o seu framework Web favorito?</p>
-            </div>
-            <footer>Ver resultado</footer>
-          </li>
-          <li>
-            <div className={Styles.surveyContent}>
-              <time>
-                <span className={Styles.day}>15</span>
-                <span className={Styles.month}>11</span>
-                <span className={Styles.year}>2024</span>
-              </time>
-
-              <p>Qual é o seu framework Web favorito?</p>
-            </div>
-            <footer>Ver resultado</footer>
-          </li>
-          <li>
-            <div className={Styles.surveyContent}>
-              <time>
-                <span className={Styles.day}>15</span>
-                <span className={Styles.month}>11</span>
-                <span className={Styles.year}>2024</span>
-              </time>
-
-              <p>Qual é o seu framework Web favorito?</p>
-            </div>
-            <footer>Ver resultado</footer>
-          </li>
-          <li>
-            <div className={Styles.surveyContent}>
               <time>
                 <span className={Styles.day}>15</span>
                 <span className={Styles.month}>11</span>
