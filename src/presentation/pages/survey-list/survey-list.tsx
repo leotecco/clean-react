@@ -1,33 +1,20 @@
 import React from 'react'
 
+import { Footer, Header, Icon, IconName } from '@/presentation/components'
+
 import Styles from './survey-list-styles.scss'
-import { Footer, Logo } from '@/presentation/components'
 
 const SurveyList: React.FC = () => {
   return (
     <div className={Styles.surveyListWrap}>
-      <header className={Styles.headerWrap}>
-        <div className={Styles.headerContent}>
-          <Logo />
-
-          <div className={Styles.logoutWrap}>
-            <span>Leonardo</span>
-            <a href="#">Sair</a>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className={Styles.contentWrap}>
         <h2>Enquetes</h2>
         <ul>
           <li>
             <div className={Styles.surveyContent}>
-              <div className={[Styles.iconWrap, Styles.red].join(' ')}>
-                <img
-                  className={Styles.icon}
-                  src="/images/icon-thumb-down.png"
-                />
-              </div>
+              <Icon iconName={IconName.thumbUp} className={Styles.iconWrap} />
 
               <time>
                 <span className={Styles.day}>15</span>
