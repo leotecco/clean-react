@@ -4,7 +4,6 @@ module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.{ts,tsx}',
     '!<rootDir>/src/main/**/*.{ts,tsx}',
-    '!<rootDir>/src/presentation/components/router/**/*.{ts,tsx}',
     '!<rootDir>/src/**/index.ts',
     '!**/*.d.ts'
   ],
@@ -21,5 +20,5 @@ module.exports = {
     '@/(.*)': '<rootDir>/src/$1',
     '\\.scss$': 'identity-obj-proxy'
   },
-  setupFiles: ['jest-localstorage-mock', 'whatwg-fetch'],
+  setupFiles: ['jest-localstorage-mock', 'whatwg-fetch']
 }
