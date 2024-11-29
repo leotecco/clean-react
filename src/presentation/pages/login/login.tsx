@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 
 import Styles from './login-styles.scss'
 
-import { type Authentication, type UpdateCurrentAccount } from '@/domain/usecases'
+import { type Authentication } from '@/domain/usecases'
 import { Footer, FormStatus, Input, LoginHeader, SubmitButton } from '@/presentation/components'
-import Context from '@/presentation/contexts/form/form-context'
+import { FormContext, ApiContext } from '@/presentation/contexts'
 import { type Validation } from '@/presentation/protocols/validation'
 
 type Props = {
   validation: Validation
   authentication: Authentication
-  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccount }) => {
+const Login: React.FC<Props> = ({ validation, authentication }) => {
   const navigate = useNavigate()
+
+  const { setCurrentAccount } = useContext(ApiContext)
 
   const [state, setState] = useState({
     isLoading: false,
@@ -56,7 +57,7 @@ const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccou
 
       const account = await authentication.auth({ email: state.email, password: state.password })
 
-      await updateCurrentAccount.save(account)
+      setCurrentAccount(account)
 
       navigate('/', { replace: true })
     } catch (error) {
@@ -68,7 +69,7 @@ const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccou
     <div className={Styles.loginWrap}>
       <LoginHeader />
 
-      <Context.Provider value={{ state, setState }}>
+      <FormContext.Provider value={{ state, setState }}>
         <form className={Styles.form} data-testid="form" onSubmit={handleSubmit}>
           <h2>Login</h2>
 
@@ -82,7 +83,7 @@ const Login: React.FC<Props> = ({ validation, authentication, updateCurrentAccou
 
           <FormStatus />
         </form>
-      </Context.Provider>
+      </FormContext.Provider>
 
       <Footer />
     </div>

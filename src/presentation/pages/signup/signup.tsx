@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import Styles from './signup-styles.scss'
 
-import { type AddAccount, type UpdateCurrentAccount } from '@/domain/usecases'
+import { type AddAccount } from '@/domain/usecases'
 import { Footer, FormStatus, Input, LoginHeader, SubmitButton } from '@/presentation/components'
-import Context from '@/presentation/contexts/form/form-context'
+import { ApiContext, FormContext } from '@/presentation/contexts'
 import { type Validation } from '@/presentation/protocols/validation'
 import { Link, useNavigate } from 'react-router-dom'
 
 type Props = {
   validation: Validation
   addAccount: AddAccount
-  updateCurrentAccount: UpdateCurrentAccount
 }
 
-const Signup: React.FC<Props> = ({ validation, addAccount, updateCurrentAccount }) => {
+const Signup: React.FC<Props> = ({ validation, addAccount }) => {
   const navigate = useNavigate()
+
+  const { setCurrentAccount } = useContext(ApiContext)
 
   const [state, setState] = useState({
     isLoading: false,
@@ -68,7 +69,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, updateCurrentAccount 
         passwordConfirmation: state.passwordConfirmation
       })
 
-      await updateCurrentAccount.save(account)
+      setCurrentAccount(account)
 
       navigate('/', { replace: true })
     } catch (error) {
@@ -84,7 +85,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, updateCurrentAccount 
     <div className={Styles.signupWrap}>
       <LoginHeader />
 
-      <Context.Provider value={{ state, setState }}>
+      <FormContext.Provider value={{ state, setState }}>
         <form className={Styles.form} data-testid="form" onSubmit={handleSubmit}>
           <h2>Criar conta</h2>
           <Input type="text" name="name" placeholder='Digite seu nome' />
@@ -101,7 +102,7 @@ const Signup: React.FC<Props> = ({ validation, addAccount, updateCurrentAccount 
 
           <FormStatus />
         </form>
-      </Context.Provider>
+      </FormContext.Provider>
 
       <Footer />
     </div>
