@@ -61,10 +61,8 @@ describe('SignUp Component', () => {
     const validationError = faker.word.words()
     makeSut({ validationError })
 
-    Helper.testChildCount('error-wrap', 0)
-
-    const submitButton = screen.getByTestId<HTMLButtonElement>('submit')
-    expect(submitButton.disabled).toBe(true)
+    expect(screen.getByTestId('error-wrap').children).toHaveLength(0)
+    expect(screen.getByTestId('submit')).toBeDisabled()
 
     Helper.testStatusForField('name', validationError)
     Helper.testStatusForField('email', validationError)
@@ -140,8 +138,7 @@ describe('SignUp Component', () => {
     Helper.populateField('password')
     Helper.populateField('passwordConfirmation')
 
-    const submitButton = screen.getByTestId<HTMLButtonElement>('submit')
-    expect(submitButton.disabled).toBe(false)
+    expect(screen.getByTestId('submit')).toBeEnabled()
   })
 
   test('Should show spinner on submit', async () => {
@@ -149,7 +146,7 @@ describe('SignUp Component', () => {
 
     simulateValidSubmit()
 
-    Helper.testElementExists('spinner')
+    expect(screen.queryByTestId('spinner')).toBeInTheDocument()
 
     await waitFor(() => screen.getByText('Home'))
   })
@@ -201,8 +198,8 @@ describe('SignUp Component', () => {
     simulateValidSubmit()
 
     await waitFor(() => {
-      Helper.testElementText('main-error', error.message)
-      Helper.testChildCount('error-wrap', 1)
+      expect(screen.getByTestId('main-error')).toHaveTextContent(error.message)
+      expect(screen.getByTestId('error-wrap').children).toHaveLength(1)
     })
   })
 
