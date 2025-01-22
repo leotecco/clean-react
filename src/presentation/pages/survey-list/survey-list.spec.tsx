@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import { type SurveyModel } from '@/domain/models'
 import { mockSurveyListModel } from '@/domain/test'
@@ -70,6 +70,24 @@ describe('SurveyList Component', () => {
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent(error.message)
       expect(screen.queryByTestId('survey-list')).not.toBeInTheDocument()
+    })
+  })
+
+  test('Should call LoadSurveyList on reload', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy()
+    jest.spyOn(loadSurveyListSpy, 'loadAll').mockRejectedValueOnce(new UnexpectedError())
+
+    makeSut(loadSurveyListSpy)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByTestId('reload'))
+    expect(loadSurveyListSpy.callCount).toBe(1)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('survey-list').querySelectorAll('li.surveyItemWrap')).toHaveLength(3)
     })
   })
 })
