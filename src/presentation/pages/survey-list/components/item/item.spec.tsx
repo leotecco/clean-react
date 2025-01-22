@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 
 import { mockSurveyModel } from '@/domain/test'
-import SurveyItem from './survey-item'
+import SurveyItem from './item'
 import { IconName } from '@/presentation/components'
 
 const makeSut = (survey = mockSurveyModel()): void => {
