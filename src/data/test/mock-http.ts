@@ -9,8 +9,11 @@ export const mockPostRequest = (): HttpPostParams => ({
   }
 })
 
-export const mockGetRequest = (): HttpPostParams => ({
-  url: faker.internet.url()
+export const mockGetRequest = (): HttpGetParams => ({
+  url: faker.internet.url(),
+  headers: {
+    Authorization: faker.string.uuid()
+  }
 })
 
 export class HttpPostClientSpy<R> implements HttpPostClient<R> {
