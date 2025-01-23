@@ -12,7 +12,7 @@ export const mockPostRequest = (): HttpPostParams => ({
 export const mockGetRequest = (): HttpGetParams => ({
   url: faker.internet.url(),
   headers: {
-    anyField: faker.string.uuid()
+    field: faker.string.uuid()
   }
 })
 
