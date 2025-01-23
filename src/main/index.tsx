@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 
-import { Router } from '@/presentation/components'
+import Router from '@/main/routes/router'
+
 import '@/presentation/styles/global.scss'
 
 const container = document.getElementById('main')
