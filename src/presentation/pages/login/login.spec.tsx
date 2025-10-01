@@ -5,10 +5,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { InvalidCredentialsError } from '@/domain/errors'
-import { type AccountModel } from '@/domain/models'
+import { AuthenticationSpy } from '@/domain/test'
+import { type AuthenticationModel } from '@/domain/usecases'
 import { ApiContext } from '@/presentation/contexts'
 import { Login } from '@/presentation/pages'
-import { AuthenticationSpy, Helper, ValidationStub } from '@/presentation/test'
+import { Helper, ValidationStub } from '@/presentation/test'
 
 type SutParams = {
   validationError: string
@@ -17,7 +18,7 @@ type SutParams = {
 type SutTypes = {
   authenticationSpy: AuthenticationSpy
   router: ReturnType<typeof createMemoryRouter>
-  setCurrentAccountMock: (account: AccountModel) => void
+  setCurrentAccountMock: (account: AuthenticationModel) => void
 }
 
 const makeSut = (params?: SutParams): SutTypes => {
