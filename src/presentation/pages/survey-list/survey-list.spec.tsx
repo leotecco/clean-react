@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import { UnexpectedError } from '@/domain/errors'
 import { LoadSurveyListSpy } from '@/domain/test'
+import { ApiContext } from '@/presentation/contexts'
+import { createMemoryRouter, type RouteObject, RouterProvider } from 'react-router-dom'
 import SurveyList from './survey-list'
 
 type SutTypes = {
@@ -9,11 +11,19 @@ type SutTypes = {
 }
 
 const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
-  render(<SurveyList loadSurveyList={loadSurveyListSpy} />)
+  const routes: RouteObject[] = [
+    { path: '/', element: <SurveyList loadSurveyList={loadSurveyListSpy} /> }
+  ]
 
-  return {
-    loadSurveyListSpy
-  }
+  const router = createMemoryRouter(routes, { initialEntries: ['/'], initialIndex: 0 })
+
+  render(
+    <ApiContext.Provider value={{ setCurrentAccount: jest.fn() }}>
+      <RouterProvider router={router} />
+    </ApiContext.Provider>
+  )
+
+  return { loadSurveyListSpy }
 }
 
 describe('SurveyList Component', () => {
