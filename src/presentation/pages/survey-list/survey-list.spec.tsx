@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 import { UnexpectedError } from '@/domain/errors'
-import { LoadSurveyListSpy } from '@/domain/test'
+import { LoadSurveyListSpy, mockAccountModel } from '@/domain/test'
 import { ApiContext } from '@/presentation/contexts'
 import { createMemoryRouter, type RouteObject, RouterProvider } from 'react-router-dom'
 import SurveyList from './survey-list'
@@ -18,7 +18,7 @@ const makeSut = (loadSurveyListSpy = new LoadSurveyListSpy()): SutTypes => {
   const router = createMemoryRouter(routes, { initialEntries: ['/'], initialIndex: 0 })
 
   render(
-    <ApiContext.Provider value={{ setCurrentAccount: jest.fn() }}>
+    <ApiContext.Provider value={{ setCurrentAccount: jest.fn(), getCurrentAccount: () => mockAccountModel() }}>
       <RouterProvider router={router} />
     </ApiContext.Provider>
   )

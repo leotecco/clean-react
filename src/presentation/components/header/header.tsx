@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Header: React.FC = () => {
   const navigate = useNavigate()
-  const { setCurrentAccount } = React.useContext(ApiContext)
+  const { setCurrentAccount, getCurrentAccount } = React.useContext(ApiContext)
 
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
     event.preventDefault()
@@ -22,7 +22,7 @@ const Header: React.FC = () => {
         <Logo />
 
         <div className={Styles.logoutWrap}>
-          <span>Leonardo</span>
+          <span data-testid="username">{getCurrentAccount().name}</span>
           <a href="#" data-testid="logout" onClick={handleLogout}>Sair</a>
         </div>
       </div>
