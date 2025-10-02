@@ -2,6 +2,11 @@ import { type GetStorage, type SetStorage } from '@/data/protocols/cache'
 
 export class LocalStorageAdapter implements SetStorage, GetStorage {
   set (key: string, value: object): void {
+    if (!value) {
+      localStorage.removeItem(key)
+      return
+    }
+
     localStorage.setItem(key, JSON.stringify(value))
   }
 
