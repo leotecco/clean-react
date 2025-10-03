@@ -7,6 +7,8 @@ export type AddAccountParams = {
   passwordConfirmation: string
 }
 
+export type AddAccountModel = AccountModel
+
 export interface AddAccount {
-  add: (params: AddAccountParams) => Promise<AccountModel>
+  add: (params: AddAccountParams) => Promise<AddAccountModel>
 }
