@@ -4,16 +4,15 @@ import Styles from './header-styles.scss'
 
 import { Logo } from '@/presentation/components'
 import { ApiContext } from '@/presentation/contexts'
-import { useNavigate } from 'react-router-dom'
+import { useLogout } from '@/presentation/hooks'
 
 const Header: React.FC = () => {
-  const navigate = useNavigate()
-  const { setCurrentAccount, getCurrentAccount } = React.useContext(ApiContext)
+  const logout = useLogout()
+  const { getCurrentAccount } = React.useContext(ApiContext)
 
   const handleLogout = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void => {
     event.preventDefault()
-    setCurrentAccount(undefined)
-    navigate('/login')
+    logout()
   }
 
   return (
