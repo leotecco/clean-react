@@ -1,7 +1,23 @@
 import { faker } from '@faker-js/faker'
-import * as FormHelper from '../support/form-helpers'
-import * as Helper from '../support/helpers'
-import * as Http from '../support/signup-mocks'
+import * as FormHelper from '../utils/form-helpers'
+import * as Helper from '../utils/helpers'
+import * as Http from '../utils/http-mocks'
+
+const mockUnexpectedError = (): void => {
+  Http.mockServerError(/signup/, 'POST')
+}
+
+const mockEmailInUseError = (): void => {
+  Http.mockForbiddenError(/signup/, 'POST')
+}
+
+const mockSuccess = (): void => {
+  Http.mockOk(/signup/, 'POST', 'account')
+}
+
+const mockSurveys = (): void => {
+  Http.mockOk(/surveys/, 'GET', 'survey-list')
+}
 
 const populateFields = (): void => {
   cy.getByTestId('name').focus()
@@ -95,7 +111,7 @@ describe('SignUp', () => {
   })
 
   it('Should present UnexpectedError on default error cases', () => {
-    Http.mockUnexpectedError()
+    mockUnexpectedError()
     simulateValidSubmit()
 
     FormHelper.testMainError('Algo de errado aconteceu. Tente novamente em breve.')
@@ -103,7 +119,7 @@ describe('SignUp', () => {
   })
 
   it('Should present EmailInUseError on 403', () => {
-    Http.mockEmailInUseError()
+    mockEmailInUseError()
     simulateValidSubmit()
 
     FormHelper.testMainError('Esse e-mail já está em uso')
@@ -112,8 +128,8 @@ describe('SignUp', () => {
   })
 
   it('Should present save account valid credentials are provided', () => {
-    Http.mockOk()
-    Http.mockSurveys()
+    mockSuccess()
+    mockSurveys()
     simulateValidSubmit()
 
     cy.getByTestId('spinner').should('not.exist')
@@ -124,7 +140,7 @@ describe('SignUp', () => {
   })
 
   it('Should prevent multiple submits', () => {
-    Http.mockOk()
+    mockSuccess()
 
     populateFields()
     cy.getByTestId('passwordConfirmation').type('{enter}{enter}')
@@ -133,7 +149,7 @@ describe('SignUp', () => {
   })
 
   it('Should not call submit if form is invalid', () => {
-    Http.mockOk()
+    mockSuccess()
 
     cy.getByTestId('email').focus()
     cy.getByTestId('email').type(faker.internet.email())
