@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { type Method } from 'cypress/types/net-stubbing'
 
-export const mockInvalidCredentialsError = (url: RegExp): void => {
+export const mockUnauthorizedError = (url: RegExp): void => {
   cy.intercept(
     'POST',
     url,
@@ -9,7 +9,7 @@ export const mockInvalidCredentialsError = (url: RegExp): void => {
   ).as('request')
 }
 
-export const mockEmailInUseError = (url: RegExp): void => {
+export const mockForbiddenError = (url: RegExp, method: string): void => {
   cy.intercept(
     'POST',
     url,
@@ -17,7 +17,7 @@ export const mockEmailInUseError = (url: RegExp): void => {
   ).as('request')
 }
 
-export const mockUnexpectedError = (url: RegExp, method: Method): void => {
+export const mockServerError = (url: RegExp, method: Method): void => {
   cy.intercept(
     method,
     url,
@@ -28,10 +28,12 @@ export const mockUnexpectedError = (url: RegExp, method: Method): void => {
   ).as('request')
 }
 
-export const mockOk = (url: RegExp, method: Method, response: any): void => {
-  cy.intercept(
+export const mockOk = (url: RegExp, method: string, fixture: string, alias: string = 'request'): void => {
+  cy.intercept({
     method,
-    url,
-    { statusCode: 200, body: response }
-  ).as('request')
+    url
+  }, {
+    statusCode: 200,
+    fixture
+  }).as(alias)
 }

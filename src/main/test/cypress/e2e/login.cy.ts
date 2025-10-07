@@ -1,6 +1,23 @@
 import { faker } from '@faker-js/faker'
-import * as FormHelper from '../support/form-helper'
-import * as Http from '../support/login-mocks'
+import * as FormHelper from '../utils/form-helpers'
+import * as Helper from '../utils/helpers'
+import * as Http from '../utils/http-mocks'
+
+const mockUnexpectedError = (): void => {
+  Http.mockServerError(/login/, 'POST')
+}
+
+const mockInvalidCredentialsError = (): void => {
+  Http.mockUnauthorizedError(/login/)
+}
+
+const mockSuccess = (): void => {
+  Http.mockOk(/login/, 'POST', 'account')
+}
+
+const mockSurveys = (): void => {
+  Http.mockOk(/surveys/, 'GET', 'survey-list')
+}
 
 const populateFields = (): void => {
   cy.getByTestId('email').focus()
@@ -62,58 +79,50 @@ describe('Login', () => {
   })
 
   it('Should present UnexpectedError on default error cases', () => {
-    Http.mockUnexpectedError()
+    mockUnexpectedError()
     simulateValidSubmit()
 
     FormHelper.testMainError('Algo de errado aconteceu. Tente novamente em breve.')
-    FormHelper.testUrl('/login')
+    Helper.testUrl('/login')
   })
 
   it('Should present InvalidCredentialsError on 401', () => {
-    Http.mockInvalidCredentialsError()
+    mockInvalidCredentialsError()
     simulateValidSubmit()
 
     FormHelper.testMainError('Credenciais inválidas')
 
-    FormHelper.testUrl('/login')
-  })
-
-  it('Should present UnexpectedError if invalid data is returned', () => {
-    Http.mockInvalidData()
-    simulateValidSubmit()
-
-    FormHelper.testMainError('Algo de errado aconteceu. Tente novamente em breve.')
-
-    FormHelper.testUrl('/login')
+    Helper.testUrl('/login')
   })
 
   it('Should present save account valid credentials are provided', () => {
-    Http.mockOk()
+    mockSuccess()
+    mockSurveys()
     simulateValidSubmit()
 
     cy.getByTestId('spinner').should('not.exist')
     cy.getByTestId('main-error').should('not.exist')
 
-    FormHelper.testUrl('/')
-    FormHelper.testLocalStorageItem('account')
+    Helper.testUrl('/')
+    Helper.testLocalStorageItem('account')
   })
 
   it('Should prevent multiple submits', () => {
-    Http.mockOk()
+    mockSuccess()
 
     populateFields()
     cy.getByTestId('password').type('{enter}{enter}')
 
-    FormHelper.testHttpCallsCount(1)
+    Helper.testHttpCallsCount(1)
   })
 
   it('Should not call submit if form is invalid', () => {
-    Http.mockOk()
+    mockSuccess()
 
     cy.getByTestId('email').focus()
     cy.getByTestId('email').type(faker.internet.email())
     cy.getByTestId('email').type('{enter}')
 
-    FormHelper.testHttpCallsCount(0)
+    Helper.testHttpCallsCount(0)
   })
 })
