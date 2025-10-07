@@ -17,13 +17,5 @@ export const mockOk = (): void => {
 }
 
 export const mockSurveys = (): void => {
-  Http.mockOk(/surveys/, 'GET', [
-    {
-      question: 'Test',
-      answers: [],
-      date: '2025-10-01T01:49:39.154Z',
-      didAnswer: false,
-      id: '68dc88b355041e20c603866e'
-    }
-  ])
+  Http.mockOk(/surveys/, 'GET', [])
 }
